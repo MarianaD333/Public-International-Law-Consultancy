@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services | PILC</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        /* --- RESET & GLOBAL FONTS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Times New Roman", Times, Baskerville, Georgia, serif;
+            background-color: #EBEAE7; 
+            color: #242543;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- SMOOTH ENTRY ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- NAVIGATION HEADER --- */
+        header {
+            background-color: #242543; 
+            padding: 1.2rem 3rem;
+            animation: fadeIn 1s ease-out;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .brand-img {
+            height: 48px; 
+            display: block;
+        }
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #ffffff;
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+        nav a:hover::after, .active-link::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* --- ROLLING NEWS TICKER --- */
+        .ticker-wrap {
+            width: 100%;
+            background-color: #1b1c33; 
+            border-bottom: 1px solid rgba(230, 225, 222, 0.2);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 0.8rem 0;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+        }
+        .ticker {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 75s linear infinite; 
+        }
+        .ticker-wrap:hover .ticker {
+            animation-play-state: paused;
+            cursor: pointer;
+        }
+        .ticker-item {
+            display: inline-block;
+            padding-right: 2rem;
+            font-size: 1.05rem;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .ticker-divider {
+            color: #E6E1DE; 
+            margin: 0 2rem;
+            font-size: 1.2rem;
+            display: inline-block;
+            opacity: 0.85;
+        }
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .services-main {
+            background-color: #EBEAE7; 
+            padding: 5rem 0 2rem 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .services-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        /* Bordered Content Card */
+        .content-box {
+            border: 3px solid #242543;
+            background-color: #EBEAE7; 
+            padding: 4rem 3.5rem;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .content-box h2 {
+            font-size: 2.4rem;
+            font-weight: 500;
+            color: #242543;
+            margin-bottom: 1.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .content-box p {
+            font-size: 1.35rem;
+            color: #242543;
+            line-height: 1.7;
+        }
+
+        .content-box p:not(:last-child) {
+            margin-bottom: 2rem;
+        }
+
+        /* --- NEW: NARROW ACCENT IMAGE STRIP BETWEEN TEXT BOXES --- */
+        .inline-image-strip {
+            width: 100%;
+            height: 90px;
+            background-image: url('library.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            border: 3px solid #242543;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* --- PANORAMIC BREAK IMAGE AT VERY BOTTOM --- */
+        .panoramic-divider {
+            width: 100%;
+            height: 380px;
+            background-image: url('library.jpg'); 
+            background-size: cover;
+            background-position: center 40%;
+        }
+
+        /* --- FOOTER DESIGN --- */
+        footer {
+            background-color: #bcbfc7; 
+            color: #242543;
+            padding: 6rem 4rem 2rem 4rem;
+            position: relative;
+        }
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1.2fr 0.1fr 2.5fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        .footer-col h3 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+        .footer-col p {
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+        }
+        .vertical-divider {
+            border-left: 2px solid #ffffff;
+            height: 180px;
+            align-self: center;
+            margin: 0 auto;
+        }
+        .footer-branding-huge {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            padding-left: 1.5rem;
+        }
+        .giant-pilc {
+            font-size: 9.5rem;
+            font-weight: 400;
+            line-height: 0.85;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: -2px;
+        }
+        .stacked-title-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .stacked-title-text span {
+            font-size: 2.8rem;
+            font-weight: 400;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.8);
+        }
+        .copyright-zone {
+            width: 100%;
+            text-align: left;
+            max-width: 1300px;
+            margin: 4rem auto 0 auto;
+            font-size: 1rem;
+            color: #242543;
+        }
+
+        @media (max-width: 1024px) {
+            .footer-container { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
+            .vertical-divider { display: none; }
+            .footer-branding-huge { grid-template-columns: 1fr; justify-content: center; text-align: center; padding-left: 0; }
+            .giant-pilc { font-size: 7rem; }
+            .stacked-title-text span { font-size: 2rem; }
+            .copyright-zone { text-align: center; }
+            .content-box { padding: 2.5rem 1.5rem; }
+            .content-box h2 { font-size: 2rem; }
+            .content-box p { font-size: 1.2rem; }
+            .inline-image-strip { height: 60px; } /* Slightly narrower strip on mobile to look sleek */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html">
+                <img src="logo-banner.png" alt="PILC Banner" class="brand-img">
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home: About Us</a></li>
+                    <li><a href="expertise.html">Our Expertise</a></li>
+                    <li><a href="services.html" class="active-link">Our Services</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="ticker-item">Guinea has reached a settlement with Emirates Global Aluminium to resolve a long-running dispute over the seizure of its local operations, agreeing to allow bauxite shipments to resume</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">Ukraine says it has defeated a €22.7 million Energy Charter Treaty claim brought by a Dutch renewables company</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">The United Nations Commission on International Trade Law, UNCITRAL, is celebrating its 60th anniversary this year</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">A UNCITRAL tribunal in London has ordered Uganda to pay US$139 million to an Egyptian-owned investor over a terminated concession to operate a cross-border railway</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">Panama has defeated an ICSID claim lodged by a Venezuela-based banking group that accused state entities of improperly drawing on bonds issued to guarantee public works contracts</span><span class="ticker-divider">⊹</span>
+        </div>
+    </div>
+
+    <main class="services-main">
+        <div class="services-container">
+            
+            <div class="content-box">
+                <h2>Overview</h2>
+                <p>PILC provides advice and representation to states appearing before international courts and tribunals. We put together teams of experienced consultants and experts tailored to the needs of your individual state.</p>
+                <p>Our consultants have experience and expertise in advocacy before the International Court of Justice, the Working Group on Arbitrary Detention, the European Court of Human Rights, African Commission on Human and Peoples’ Rights, the Kosovo Specialist Chambers, ICSID Tribunals, the International Criminal Court and the Permanent Court of Arbitration.</p>
+            </div>
+
+            <div class="inline-image-strip"></div>
+
+            <div class="content-box">
+                <h2>Our Services</h2>
+                <p>At our first consultation, we will establish your objectives. This can be held online or in person at no cost. We also undertake a significant amount of pro bono international legal work for states from the Global South. Our mission is to empower states and communities around the world to be able to use the tools of international law.</p>
+                <p>Our international legal work has involved the following countries: Bangladesh, Egypt, Ghana, Indonesia, Kosovo, Libya, Morocco, Pakistan, Palestine, Rwanda, United Kingdom, Saudi Arabia, Syria, United States.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="panoramic-divider"></div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>London Office</h3>
+                <p>45 Fitzroy Street</p>
+                <p>London W1T 6EB</p>
+                <br>
+                <p>United Kingdom</p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <p>Email: info@thepilc.co.uk</p>
+            </div>
+
+            <div class="vertical-divider"></div>
+
+            <div class="footer-branding-huge">
+                <div class="giant-pilc">PILC</div>
+                <div class="stacked-title-text">
+                    <span>Public</span>
+                    <span>International</span>
+                    <span>Law</span>
+                    <span>Consultancy</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright-zone">
+            <p>&copy; Public International Law Consultancy 2026</p>
+        </div>
+    </footer>
+
+</body>
+</html>
