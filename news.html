@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>News | PILC</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+ 
+    <style>
+        /* ==========================================
+           PILC DESIGN SYSTEM & STYLE VARIABLES
+           ========================================== */
+        :root {
+            --primary-navy: #242543;     /* Headers, borders, text emphasis */
+            --secondary-dark: #1b1c33;   /* Ticker background, drawer background */
+            --bg-stone: #E6E1DE;         /* Main page canvas tint (harmonized with EBEAE7) */
+            --footer-grey: #bcbfc7;      /* Muted slate for footer background */
+            --white: #ffffff;
+            --font-serif: "Times New Roman", Times, Baskerville, Georgia, serif;
+        }
+
+        /* --- RESET & FIXED VIEWPORT SCALING --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background-color: var(--bg-stone);
+            -webkit-text-size-adjust: 100%;
+        }
+        body {
+            font-family: var(--font-serif);
+            color: var(--primary-navy);
+            line-height: 1.6;
+        }
+ 
+        /* --- SMOOTH ENTRY ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+ 
+        /* --- NAVIGATION HEADER (LAPTOP) --- */
+        header {
+            background-color: var(--primary-navy); 
+            padding: 1.2rem 3rem;
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 100;
+            width: 100%;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .brand-link {
+            display: inline-block;
+        }
+        .brand-img {
+            height: 48px; 
+            display: block;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+        nav li {
+            position: relative;
+        }
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding: 0.5rem 0;
+            display: inline-block;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--white);
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+        nav a:hover::after, .active-link::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* --- HEADER DROPDOWN FUNCTIONALITY (LAPTOP) --- */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-navy);
+            min-width: 240px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(235, 234, 231, 0.2);
+            list-style: none;
+            padding: 0.5rem 0;
+            border-radius: 0 0 4px 4px;
+        }
+        .dropdown-menu li {
+            width: 100%;
+        }
+        .dropdown-menu a {
+            color: var(--white);
+            padding: 0.7rem 1.5rem;
+            text-decoration: none;
+            display: block;
+            font-size: 0.95rem;
+            text-align: left;
+            transition: background 0.3s;
+        }
+        .dropdown-menu a::after {
+            display: none; 
+        }
+        .dropdown-menu a:hover {
+            background-color: var(--secondary-dark);
+        }
+        nav li:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Hamburger Drawer Elements (MOBILE) */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0.2rem;
+            line-height: 1;
+        }
+        .nav-drawer {
+            position: fixed;
+            top: 0;
+            right: -320px; 
+            width: 320px;
+            height: 100%;
+            background-color: var(--secondary-dark); 
+            box-shadow: -5px 0 15px rgba(0,0,0,0.25);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 999;
+        }
+        .nav-drawer.open {
+            right: 0;
+        }
+        .drawer-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 2rem;
+            align-self: flex-end;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .nav-drawer ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            margin-top: 1rem;
+        }
+        .nav-drawer a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.25rem;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 998;
+        }
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+ 
+        /* --- ROLLING NEWS TICKER --- */
+        .ticker-wrap {
+            width: 100%;
+            background-color: var(--secondary-dark); 
+            border-bottom: 1px solid rgba(230, 225, 222, 0.2);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 0.8rem 0;
+            
+            -webkit-user-select: none; 
+            -ms-user-select: none;     
+            user-select: none;         
+        }
+        .ticker {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 75s linear infinite; 
+        }
+        .ticker-item {
+            display: inline-block;
+            font-size: 1.05rem;
+            color: var(--white);
+            letter-spacing: 0.5px;
+        }
+        .ticker-divider {
+            color: var(--bg-stone); 
+            margin: 0 1.8rem;
+            font-size: 1.1rem;
+            display: inline-block;
+            opacity: 0.85;
+            vertical-align: middle;
+        }
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+ 
+        /* --- MAIN CONTENT AREA --- */
+        .news-main {
+            background-color: var(--bg-stone);
+            padding: 5rem 0 0 0; 
+            animation: fadeIn 1s ease-out;
+        }
+ 
+        .title-container {
+            max-width: 920px;
+            margin: 0 auto 4rem auto;
+            padding: 0 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        .title-box {
+            border: 2px solid var(--primary-navy);
+            background-color: var(--bg-stone);
+            padding: 2.2rem 2rem; 
+            text-align: center;
+        }
+        .title-box h1 {
+            font-size: 3.2rem;
+            font-weight: 400;
+            color: var(--primary-navy);
+            letter-spacing: 0.3px;
+            line-height: 1.3;
+        }
+ 
+        /* News Article Row Styles (LAPTOP) */
+        .news-row {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 4.5rem;
+            align-items: center;
+        }
+        .news-img-frame {
+            width: 100%;
+        }
+        .news-img-frame img {
+            width: 100%;
+            height: auto;
+            max-height: 280px;
+            object-fit: cover;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+        .news-text-frame {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .news-date {
+            font-size: 1.2rem;
+            color: var(--primary-navy);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        .news-text-frame h2 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--primary-navy);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            max-width: 650px;
+        }
+        .news-text-frame p {
+            font-size: 1.25rem;
+            color: var(--primary-navy);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 700px;
+        }
+        .read-more {
+            font-size: 1.15rem;
+            color: var(--primary-navy);
+            text-decoration: none;
+            display: inline-block;
+            padding-bottom: 4px;
+            border-bottom: 2px solid var(--primary-navy);
+            font-weight: 500;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+        .read-more:hover {
+            opacity: 0.7;
+        }
+ 
+        .section-divider {
+            max-width: 1100px;
+            margin: 0 auto;
+            border: none;
+            border-top: 1px solid var(--primary-navy); 
+        }
+
+        /* --- DETAILED FULL ARTICLE VIEW STYLES --- */
+        #main-news-view {
+            display: block;
+        }
+        #full-article-view {
+            display: none;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+        .back-btn {
+            font-size: 1.1rem;
+            color: var(--primary-navy);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            opacity: 0.6;
+        }
+        .article-header-box {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .article-header-box h1 {
+            font-size: 2.8rem;
+            font-weight: 400;
+            color: var(--primary-navy);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+        }
+        .article-hero-frame {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 3.5rem auto;
+            border: 1px solid rgba(36, 37, 67, 0.2);
+        }
+        .article-hero-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .article-body-text {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .article-body-text p {
+            font-size: 1.3rem;
+            line-height: 1.75;
+            color: var(--primary-navy);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+ 
+        /* --- PANORAMIC BANNER --- */
+        .panoramic-divider-container {
+            width: 100%;
+            background-color: var(--bg-stone);
+            padding-top: 2rem;
+            display: block;
+        }
+        .panoramic-library-img {
+            width: 100%;
+            height: auto;
+            max-height: 380px;
+            object-fit: cover;
+            display: block;
+        }
+ 
+        /* --- FOOTER DESIGN --- */
+        footer {
+            background-color: var(--footer-grey); 
+            color: var(--primary-navy);
+            padding: 6rem 4rem 2rem 4rem;
+            position: relative;
+            width: 100%;
+        }
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1.2fr 0.1fr 2.5fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        .footer-col h3 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+        .footer-col p {
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+        }
+        .vertical-divider {
+            border-left: 2px solid var(--white);
+            height: 180px;
+            align-self: center;
+            margin: 0 auto;
+        }
+        .footer-branding-huge {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            padding-left: 1.5rem;
+        }
+        .giant-pilc {
+            font-size: 9.5rem;
+            font-weight: 400;
+            line-height: 0.85;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: -2px;
+        }
+        .stacked-title-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .stacked-title-text span {
+            font-size: 2.8rem;
+            font-weight: 400;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.8);
+        }
+        .copyright-zone {
+            width: 100%;
+            text-align: left;
+            max-width: 1300px;
+            margin: 4rem auto 0 auto;
+            font-size: 1rem;
+            color: var(--primary-navy);
+        }
+ 
+        /* --- RESPONSIVE ADAPTATIONS (MOBILE OVERRIDES) --- */
+        @media (max-width: 1024px) {
+            header {
+                padding: 1.1rem 1.2rem;
+            }
+            nav {
+                display: none;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .brand-link {
+                max-width: 75%;
+            }
+            .brand-img {
+                height: 45px; 
+            }
+
+            .news-main {
+                padding: 3.5rem 0 0 0;
+            }
+            .title-container {
+                padding: 0 1.2rem;
+                margin-bottom: 1rem;
+            }
+            .title-box {
+                padding: 2.5rem 1.2rem;
+            }
+            .title-box h1 { 
+                font-size: 2.1rem; 
+            }
+
+            /* FORCE STREAMLINED MOBILE ORDER: Date, Title, Text, Link, then Image */
+            .news-row { 
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 2rem !important; 
+                padding: 3rem 1.2rem !important; 
+                text-align: center;
+            }
+            
+            .news-text-frame {
+                order: 1 !important;
+                padding: 0;
+            }
+            .news-text-frame h2 { 
+                font-size: 1.4rem; 
+                margin-bottom: 1rem;
+            }
+            .news-text-frame p {
+                font-size: 1.18rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .news-img-frame {
+                order: 2 !important;
+                max-width: 100%; 
+                margin: 0; 
+            }
+            .news-img-frame img {
+                max-height: 260px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+            
+            .section-divider { 
+                max-width: 90%; 
+                margin: 1rem auto;
+            }
+
+            /* Full article view sizing for small viewports */
+            #full-article-view {
+                padding: 3rem 1.2rem;
+            }
+            .article-header-box h1 { 
+                font-size: 1.9rem; 
+            }
+            .article-body-text p {
+                font-size: 1.18rem;
+            }
+
+            /* Footer Adjustments on Mobile */
+            .panoramic-library-img {
+                max-height: 200px;
+            }
+            footer {
+                padding: 4rem 1.2rem 2rem 1.2rem;
+            }
+            .footer-container { 
+                grid-template-columns: 1fr; 
+                gap: 2.5rem; 
+                text-align: center; 
+            }
+            .vertical-divider { 
+                display: none; 
+            }
+            .footer-branding-huge { 
+                grid-template-columns: 1fr; 
+                justify-content: center; 
+                text-align: center; 
+                padding-left: 0; 
+                gap: 0.5rem;
+            }
+            .giant-pilc { 
+                font-size: 5.5rem; 
+            }
+            .stacked-title-text span { 
+                font-size: 1.5rem; 
+            }
+            .copyright-zone { 
+                text-align: center; 
+            }
+        }
+    </style>
+</head>
+<body>
+ 
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="brand-link">
+                <img src="logo-banner.png" alt="PILC Banner" class="brand-img">
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home: About Us</a></li>
+                    <li><a href="expertise.html">Our Expertise</a></li>
+                    <li><a href="services.html">Our Services</a></li>
+                    <li>
+                        <a href="news.html" class="active-link" onclick="closeArticle()">News ▾</a>
+                        <ul class="dropdown-menu">
+                            <li><a onclick="openArticle('climate')">Climate Obligations Case</a></li>
+                            <li><a onclick="openArticle('palestine')">Humanitarian Aid Case</a></li>
+                            <li><a onclick="openArticle('chagos')">Chagos Sovereignty Case</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" id="openDrawerBtn" aria-label="Open Menu">☰</button>
+        </div>
+    </header>
+
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <div class="nav-drawer" id="navDrawer">
+        <button class="drawer-close" id="closeDrawerBtn" aria-label="Close Menu">&times;</button>
+        <ul>
+            <li><a href="index.html">Home: About Us</a></li>
+            <li><a href="expertise.html">Our Expertise</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="news.html">News</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </div>
+ 
+    <div class="ticker-wrap" id="protectedTicker">
+        <div class="ticker">
+            <span class="ticker-item">Guinea has reached a settlement with Emirates Global Aluminium to resolve a long-running dispute over the seizure of its local operations, agreeing to allow bauxite shipments to resume</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">Ukraine says it has defeated a €22.7 million Energy Charter Treaty claim brought by a Dutch renewables company</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">The United Nations Commission on International Trade Law, UNCITRAL, is celebrating its 60th anniversary this year</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">A UNCITRAL tribunal in London has ordered Uganda to pay US$139 million to an Egyptian-owned investor over a terminated concession to operate a cross-border railway</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">Panama has defeated an ICSID claim lodged by a Venezuela-based banking group that accused state entities of improperly drawing on bonds issued to guarantee public works contracts</span>
+        </div>
+    </div>
+ 
+    <main class="news-main" id="main-news-view">
+        
+        <div class="title-container">
+            <div class="title-box">
+                <h1>Recent Public International Law<br>News</h1>
+            </div>
+        </div>
+ 
+        <div class="news-row">
+            <div class="news-img-frame">
+                <img src="climate-globe.jpg" alt="Children holding globe painting">
+            </div>
+            <div class="news-text-frame">
+                <div class="news-date">December 2024</div>
+                <h2>ICJ Advisory Opinion on Climate Obligations: A Landmark for Global Justice and Litigation</h2>
+                <p>The International Court of Justice held hearings in December 2024 to address countries' legal obligations on climate change, following a 2023 request by the United Nations General Assembly. Whilst the resulting advisory opinion is non-binding, it is anticipated to shape global climate litigation and significantly influence international legal and policy frameworks.</p>
+                <a class="read-more" onclick="openArticle('climate')">Read More Here</a>
+            </div>
+        </div>
+ 
+        <hr class="section-divider">
+ 
+        <div class="news-row">
+            <div class="news-img-frame">
+                <img src="icj-courtroom.jpg" alt="International Court of Justice Bench">
+            </div>
+            <div class="news-text-frame">
+                <div class="news-date">December 2024</div>
+                <h2>UN Seeks ICJ Opinion on Israel's Humanitarian Aid Obligations to Palestine</h2>
+                <p>On the 19th of December 2024, the United Nations General Assembly voted to seek an advisory opinion from the ICJ on Israel's obligations to facilitate aid to Palestinians. This follows concerns over Israel's ban on the United Nations' Palestinian refugee agency (UNRWA) and other challenges affecting humanitarian aid in Gaza.</p>
+                <a class="read-more" onclick="openArticle('palestine')">Read More Here</a>
+            </div>
+        </div>
+ 
+        <hr class="section-divider">
+ 
+        <div class="news-row">
+            <div class="news-img-frame">
+                <img src="chagos-map.jpg" alt="Chagos Islands Map Details">
+            </div>
+            <div class="news-text-frame">
+                <div class="news-date">November 2024</div>
+                <h2>UK Transfers Sovereignty of Chagos Islands to Mauritius Following ICJ Ruling</h2>
+                <p>In November 2024, the United Kingdom transferred sovereignty of the Chagos Islands to Mauritius, following a 2019 ruling by the International Court of Justice, which declared the UK's control unlawful under international law. The decision upholds the principle of self-determination and seeks to rectify the colonial injustices faced by the Chagossian people.</p>
+                <a class="read-more" onclick="openArticle('chagos')">Read More Here</a>
+            </div>
+        </div>
+ 
+    </main>
+
+    <main class="news-main" id="full-article-view">
+        <a class="back-btn" onclick="closeArticle()">← Back to News</a>
+        
+        <div id="article-target-content"></div>
+    </main>
+ 
+    <div class="panoramic-divider-container">
+        <img src="Screenshot 2026-05-21 005850.jpg" alt="Classical Library with Busts and Historic Volumes" class="panoramic-library-img">
+    </div>
+ 
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>London Office</h3>
+                <p>45 Fitzroy Street</p>
+                <p>London W1T 6EB</p>
+                <br>
+                <p>United Kingdom</p>
+            </div>
+             
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <p>Email: info@thepilc.co.uk</p>
+            </div>
+ 
+            <div class="vertical-divider"></div>
+ 
+            <div class="footer-branding-huge">
+                <div class="giant-pilc">PILC</div>
+                <div class="stacked-title-text">
+                    <span>Public</span>
+                    <span>International</span>
+                    <span>Law</span>
+                    <span>Consultancy</span>
+                </div>
+            </div>
+        </div>
+ 
+        <div class="copyright-zone">
+            <p>&copy; Public International Law Consultancy 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        const articlesDatabase = {
+            climate: {
+                title: "ICJ Advisory Opinion on Climate Obligations: A Landmark for Global Justice and Litigation",
+                date: "December 2024",
+                imgSrc: "climate-globe.jpg",
+                imgAlt: "Children holding globe painting",
+                body: `
+                    <p>The International Court of Justice (ICJ) held public hearings from the 2nd to the 13th of December 2024, to examine the obligations of states in respect of climate change. This involved an unprecedented level of involvement, with a record number of 98 states presenting oral submissions before the court. This landmark case arose from a request by the United Nations General Assembly (UNGA) in 2023, reflecting the global community's growing urgency to address the catastrophic impacts of climate change and clarify the obligations of nations under international law.</p>
+                    <p>The UNGA's request sought an advisory opinion from the ICJ to determine whether countries that contribute significantly to greenhouse gas emissions can be held legally accountable for the resulting environmental damage, particularly its disproportionate effects on vulnerable nations such as small island states. These states, despite contributing minimally to global emissions, face existential threats from rising sea levels, extreme weather events, and loss of biodiversity, challenges intensified by the lack of enforceable international mechanisms to address these disparities.</p>
+                    <p>The resulting advisory opinion, anticipated in 2025, is expected to clarify states' legal obligations regarding climate change, influencing global legal frameworks and national policies. This is likely to empower vulnerable nations in their pursuit of climate justice and provide a legal precedent for future climate litigation.</p>
+                    <p style="text-align: center; margin-top: 3rem;">You can watch all of the public hearings in relation to the case here - <a href="https://www.icj-cij.org/multimedia/204420" target="_blank" style="color: #242543; font-weight: bold;">https://www.icj-cij.org/multimedia/204420</a></p>
+                `
+            },
+            palestine: {
+                title: "UN Seeks ICJ Opinion on Israel's Humanitarian Aid Obligations to Palestine",
+                date: "December 2024",
+                imgSrc: "icj-courtroom.jpg",
+                imgAlt: "International Court of Justice Bench",
+                body: `
+                    <p>On the 19th of December 2024, the United Nations General Assembly (UNGA) adopted a resolution seeking an advisory opinion from the International Court of Justice (ICJ) regarding Israel's legal obligations to facilitate humanitarian aid to Palestinians. This decision reflects the ever-increasing international concern over restrictions on aid delivery to the occupied Palestinian territories, particularly in the Gaza Strip.</p>
+                    <p>In the upcoming advisory opinion, the ICJ will examine key legal issues, including Israel's duties under the Fourth Geneva Convention as an occupying power, its adherence to humanitarian principles such as neutrality and impartiality in aid delivery, and the legal rights and operational scope of UN agencies, including the United Nations Relief and Works Agency (UNRWA), to function effectively in conflict zones.</p>
+                    <p>Although not legally binding, the ICJ's opinion could have far-reaching effects, providing authoritative guidance on international humanitarian law, shaping global policies on aid delivery in the midst of humanitarian crises and addressing the accountability of states for actions that contribute to worsening human suffering.</p>
+                `
+            },
+            chagos: {
+                title: "UK Transfers Sovereignty of Chagos Islands to Mauritius Following ICJ Ruling",
+                date: "November 2024",
+                imgSrc: "chagos-map.jpg",
+                imgAlt: "Chagos Islands Map Details",
+                body: `
+                    <p>In 2019, the International Court of Justice (ICJ) issued an advisory opinion stating that the UK's continued control over the Chagos Islands was unlawful. The court concluded that the separation of the islands from Mauritius violated the principle of self-determination. In its findings, ICJ ruled that the UK had failed to allow Mauritius to complete the decolonisation process by retaining control of the islands and denying the Chagossian the right to return to their homeland.</p>
+                    <p>Following this, UN General Assembly issued a resolution calling for the return of the Chagos Islands to Mauritius. As of November 2024, the UK has acknowledged the ICJ's ruling. This decision underlines the UK's commitment to respecting international law and the rights of the people affected by the historical injustices of colonial rule.</p>
+                `
+            }
+        };
+
+        const openDrawerBtn = document.getElementById('openDrawerBtn');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+        const navDrawer = document.getElementById('navDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+
+        function openMenu() {
+            navDrawer.classList.add('open');
+            drawerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeMenu() {
+            navDrawer.classList.remove('open');
+            drawerOverlay.classList.remove('active');
+            document.body.style.overflow = ''; 
+        }
+
+        openDrawerBtn.addEventListener('click', openMenu);
+        closeDrawerBtn.addEventListener('click', closeMenu);
+        drawerOverlay.addEventListener('click', closeMenu);
+
+        function openArticle(id) {
+            const articleData = articlesDatabase[id];
+            if (!articleData) return;
+
+            // Optional drawer cleanup if link clicked inside mobile view
+            closeMenu();
+
+            const contentHtml = `
+                <div class="article-header-box">
+                    <div class="news-date">${articleData.date}</div>
+                    <h1>${articleData.title}</h1>
+                </div>
+                <div class="article-hero-frame">
+                    <img src="${articleData.imgSrc}" alt="${articleData.imgAlt}">
+                </div>
+                <div class="article-body-text">
+                    ${articleData.body}
+                </div>
+            `;
+
+            document.getElementById('article-target-content').innerHTML = contentHtml;
+            document.getElementById('main-news-view').style.display = 'none';
+            document.getElementById('full-article-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function closeArticle() {
+            document.getElementById('full-article-view').style.display = 'none';
+            document.getElementById('main-news-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // Security interactions
+        const protectedTicker = document.getElementById('protectedTicker');
+        protectedTicker.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
