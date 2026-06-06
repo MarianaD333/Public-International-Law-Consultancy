@@ -56,7 +56,7 @@
 
         /* --- NAVIGATION HEADER --- */
         header {
-            background-color: var(--primary-navy); 
+            background-color: var(--primary-navy);
             padding: 1.2rem 2rem;
             animation: fadeIn 1s ease-out;
             width: 100%;
@@ -77,7 +77,7 @@
             margin-right: auto; 
         }
         .brand-img {
-            height: 45px; 
+            height: 45px;
             display: block;
             width: auto;
             max-width: 100%;
@@ -91,18 +91,20 @@
             list-style: none;
             align-items: center;
         }
+        nav li {
+            position: relative;
+        }
         nav a {
             color: var(--white);
             text-decoration: none;
             font-size: 1.05rem;
             letter-spacing: 0.5px;
             position: relative;
+            padding: 0.5rem 0;
+            display: inline-block;
             transition: color 0.3s ease;
+            cursor: pointer;
             white-space: nowrap;
-        }
-        nav a.active-link {
-            font-size: 1.05rem;
-            color: var(--white);
         }
         nav a::after {
             content: '';
@@ -119,6 +121,43 @@
         nav a:hover::after, .active-link::after {
             transform: scaleX(1);
             transform-origin: bottom left;
+        }
+
+        /* --- HEADER DROPDOWN FUNCTIONALITY (LAPTOP) --- */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-navy);
+            min-width: 240px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(235, 234, 231, 0.2);
+            list-style: none;
+            padding: 0.5rem 0;
+            border-radius: 0 0 4px 4px;
+        }
+        .dropdown-menu li {
+            width: 100%;
+        }
+        .dropdown-menu a {
+            color: var(--white);
+            padding: 0.7rem 1.5rem;
+            text-decoration: none;
+            display: block;
+            font-size: 0.95rem;
+            text-align: left;
+            transition: background 0.3s;
+        }
+        .dropdown-menu a::after {
+            display: none;
+        }
+        .dropdown-menu a:hover {
+            background-color: var(--secondary-dark);
+        }
+        nav li:hover .dropdown-menu {
+            display: block;
         }
 
         /* Hamburger Drawer Elements */
@@ -194,7 +233,7 @@
         /* --- ROLLING NEWS TICKER (COPY-PROTECTED) --- */
         .ticker-wrap {
             width: 100%;
-            background-color: var(--secondary-dark); 
+            background-color: var(--secondary-dark);
             border-bottom: 1px solid rgba(230, 225, 222, 0.2);
             overflow: hidden;
             white-space: nowrap;
@@ -207,7 +246,7 @@
         .ticker {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 75s linear infinite; 
+            animation: marquee 75s linear infinite;
         }
         .ticker-item {
             display: inline-block;
@@ -216,7 +255,7 @@
             letter-spacing: 0.5px;
         }
         .ticker-divider {
-            color: var(--bg-stone); 
+            color: var(--bg-stone);
             margin: 0 1.8rem;
             font-size: 1.1rem;
             display: inline-block;
@@ -229,69 +268,94 @@
         }
 
         /* --- MAIN CONTENT AREA --- */
-        .services-main {
-            background-color: var(--bg-stone); 
-            padding: 5rem 0 2rem 0;
+        main {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
             animation: fadeIn 1s ease-out;
         }
-        .services-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        h1.page-title {
+            font-size: 3.2rem;
+            font-weight: 400;
+            margin-bottom: 4rem;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Alternating Flex Layout Grid rows */
+        .service-row {
             display: flex;
-            flex-direction: column;
-            gap: 4rem;
-        }
-
-        /* Bordered Content Card */
-        .content-box {
-            border: 3px solid var(--primary-navy);
-            background-color: var(--bg-stone); 
-            padding: 4rem 3.5rem;
-            text-align: center;
+            align-items: center;
+            gap: 5rem;
+            margin-bottom: 6rem;
             animation: fadeInUp 1s ease-out;
         }
-        .content-box h2 {
-            font-size: 2.4rem;
-            font-weight: 500;
-            color: var(--primary-navy);
-            margin-bottom: 1.8rem;
-            letter-spacing: 0.5px;
+        .service-row:nth-child(even) {
+            flex-direction: row-reverse;
         }
-        .content-box p {
-            font-size: 1.35rem;
-            color: var(--primary-navy);
-            line-height: 1.7;
-        }
-        .content-box p:not(:last-child) {
-            margin-bottom: 2rem;
-        }
-
-        /* Accent image strip layout values */
-        .inline-image-strip {
-            width: 100%;
-            height: 90px;
-            background-image: url('library.jpg');
-            background-size: cover;
-            background-position: center 30%;
-            border: 3px solid var(--primary-navy);
-            animation: fadeInUp 1s ease-out;
-        }
-
-        /* --- PANORAMIC BREAK IMAGE AT VERY BOTTOM --- */
-        .panoramic-divider {
-            width: 100%;
+        .service-image {
+            flex: 1;
+            border: 1px solid rgba(36, 37, 67, 0.15);
+            overflow: hidden;
             height: 380px;
-            background-image: url('library.jpg'); 
-            background-size: cover;
-            background-position: center 40%;
+        }
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .service-text {
+            flex: 1;
+        }
+        .service-text h2 {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        .service-text p {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* --- FOOTER DESIGN --- */
+        /* Global Jurisdictions Paragraph Footer Zone */
+        .jurisdictions-box {
+            border-top: 1px solid rgba(36, 37, 67, 0.2);
+            padding-top: 4rem;
+            margin-top: 4rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        .jurisdictions-box h2 {
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        .jurisdictions-box p {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- PANORAMIC DIVIDER BANNER --- */
+        .panoramic-divider-container {
+            width: 100%;
+            background-color: var(--bg-stone);
+            padding-top: 2rem;
+            display: block;
+        }
+        .panoramic-library-img {
+            width: 100%;
+            height: auto;
+            max-height: 380px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* --- BOLD INSTITUTIONAL FOOTER --- */
         footer {
-            background-color: var(--footer-grey); 
+            background-color: var(--footer-grey);
             color: var(--primary-navy);
             padding: 6rem 4rem 2rem 4rem;
+            position: relative;
             width: 100%;
         }
         .footer-container {
@@ -301,7 +365,6 @@
             grid-template-columns: 1.2fr 1.2fr 0.1fr 2.5fr;
             gap: 2rem;
             align-items: flex-start;
-            width: 100%;
         }
         .footer-col h3 {
             font-size: 1.8rem;
@@ -348,6 +411,7 @@
         }
         .copyright-zone {
             width: 100%;
+            text-align: left;
             max-width: 1300px;
             margin: 4rem auto 0 auto;
             font-size: 1rem;
@@ -367,40 +431,52 @@
             }
             .brand-link {
                 max-width: 75%;
-                margin-right: 0; 
+                margin-right: 0;
             }
             .brand-img {
-                height: 48px; 
+                height: 45px;
             }
 
-            .services-main {
-                padding: 3.5rem 0 1rem 0;
+            main {
+                padding: 3.5rem 1.2rem;
             }
-            .services-container {
-                padding: 0 1.2rem;
-                gap: 2.5rem;
+            h1.page-title {
+                font-size: 2.6rem;
+                margin-bottom: 2.5rem;
+                text-align: center;
             }
-            .content-box { 
-                padding: 3.5rem 1.8rem; 
+            .service-row, .service-row:nth-child(even) {
+                flex-direction: column;
+                gap: 2rem;
+                margin-bottom: 4rem;
+            }
+            .service-image {
                 width: 100%;
+                height: 260px;
             }
-            .content-box h2 { 
-                font-size: 2.1rem; 
-                margin-bottom: 1.5rem;
+            .service-text h2 {
+                font-size: 1.8rem;
+                text-align: center;
             }
-            .content-box p { 
-                font-size: 1.18rem; 
+            .service-text p {
+                font-size: 1.15rem;
+                text-align: justify;
             }
-            .content-box p:not(:last-child) {
-                margin-bottom: 1.5rem;
+            .jurisdictions-box {
+                padding-top: 3rem;
+                margin-top: 3rem;
             }
-            .inline-image-strip { 
-                height: 65px; 
-            } 
+            .jurisdictions-box h2 {
+                font-size: 1.8rem;
+                text-align: center;
+            }
+            .jurisdictions-box p {
+                font-size: 1.15rem;
+                text-align: center;
+            }
 
-            /* Footer Adjustments on Mobile */
-            .panoramic-divider {
-                height: 200px;
+            .panoramic-library-img {
+                max-height: 200px;
             }
             footer {
                 padding: 4rem 1.2rem 2rem 1.2rem;
@@ -444,7 +520,14 @@
                     <li><a href="index.html">Home: About Us</a></li>
                     <li><a href="expertise.html">Our Expertise</a></li>
                     <li><a href="services.html" class="active-link">Our Services</a></li>
-                    <li><a href="news.html">News</a></li>
+                    <li>
+                        <a href="news.html">News ▾</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="news.html">Climate Obligations Case</a></li>
+                            <li><a href="news.html">Humanitarian Aid Case</a></li>
+                            <li><a href="news.html">Chagos Sovereignty Case</a></li>
+                        </ul>
+                    </li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>
             </nav>
@@ -455,7 +538,7 @@
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
     <div class="nav-drawer" id="navDrawer">
-        <button class="drawer-close" id="closeDrawerBtn" aria-label="Close Menu">&times;</button>
+        <button class="drawer-close" id="closeDrawerBtn" aria-label="Close Menu">×</button>
         <ul>
             <li><a href="index.html">Home: About Us</a></li>
             <li><a href="expertise.html">Our Expertise</a></li>
@@ -475,27 +558,49 @@
         </div>
     </div>
 
-    <main class="services-main">
-        <div class="services-container">
-            
-            <div class="content-box">
-                <h2>Overview</h2>
-                <p>PILC provides advice and representation to states appearing before international courts and tribunals. We put together teams of experienced consultants and experts tailored to the needs of your individual state.</p>
-                <p>Our consultants have experience and expertise in advocacy before the International Court of Justice, the Working Group on Arbitrary Detention, the European Court of Human Rights, African Commission on Human and Peoples’ Rights, the Kosovo Specialist Chambers, ICSID Tribunals, the International Criminal Court and the Permanent Court of Arbitration.</p>
+    <main>
+        <h1 class="page-title">Our Services</h1>
+
+        <div class="service-row">
+            <div class="service-image">
+                <img src="service-advisory.jpg" alt="Strategic Advice Mapping">
             </div>
-
-            <div class="inline-image-strip"></div>
-
-            <div class="content-box">
-                <h2>Our Services</h2>
-                <p>At our first consultation, we will establish your objectives. This can be held online or in person at no cost. We also undertake a significant amount of pro bono international legal work for states from the Global South. Our mission is to empower states and communities around the world to be able to use the tools of international law.</p>
-                <p>Our international legal work has involved the following countries: Bangladesh, Egypt, Ghana, Indonesia, Kosovo, Libya, Morocco, Pakistan, Rwanda, United Kingdom, Saudi Arabia, Syria, United States.</p>
+            <div class="service-text">
+                <h2>Strategic Legal Advisory</h2>
+                <p>We deliver comprehensive legal guidance on core public international law frameworks, helping states and sovereign entities confidently navigate their rights and international obligations. Our assessments help mitigate geopolitical and compliance risks before they emerge on the global stage.</p>
             </div>
+        </div>
 
+        <div class="service-row">
+            <div class="service-image">
+                <img src="service-dispute.jpg" alt="International Arbitration Panel Room">
+            </div>
+            <div class="service-text">
+                <h2>International Dispute Resolution</h2>
+                <p>Our consultants provide tactical analysis and support for complex proceedings before the International Court of Justice (ICJ), the Permanent Court of Arbitration (PCA), and specialized international tribunals. We assist counsel teams with rigorous evidentiary compilation and memorial drafting.</p>
+            </div>
+        </div>
+
+        <div class="service-row">
+            <div class="service-image">
+                <img src="service-treaty.jpg" alt="Official Accord Protocol Signing Desk">
+            </div>
+            <div class="service-text">
+                <h2>Treaty Drafting &amp; Negotiations</h2>
+                <p>We support government delegations during bilateral and multilateral negotiations. Our services cover structural drafting and textual interpretations of treaties, border accords, and investment agreements to safeguard domestic sovereign interests while aligning with global rules.</p>
+            </div>
+        </div>
+
+        <div class="jurisdictions-box">
+            <h2>Global Experience</h2>
+            <p>Our mission is to empower states and communities around the world to be able to use the tools of international law.</p>
+            <p>Our international legal work has involved the following countries: Bangladesh, Egypt, Ghana, Indonesia, Kosovo, Libya, Morocco, Pakistan, Palestine, Rwanda, United Kingdom, Saudi Arabia, Syria, United States.</p>
         </div>
     </main>
 
-    <div class="panoramic-divider"></div>
+    <div class="panoramic-divider-container">
+        <img src="library-services.jpg" alt="Classical Library Detail" class="panoramic-library-img">
+    </div>
 
     <footer>
         <div class="footer-container">
