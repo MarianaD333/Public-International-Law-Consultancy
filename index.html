@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Our Expertise | PILC</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        /* --- RESET & FIXED VIEWPORT SCALING --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background-color: #E6E1DE;
+            -webkit-text-size-adjust: 100%;
+        }
+        body {
+            font-family: "Times New Roman", Times, Baskerville, Georgia, serif;
+            color: #242543;
+            line-height: 1.6;
+        }
+
+        /* --- SMOOTH ENTRY ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- NAVIGATION HEADER --- */
+        header {
+            background-color: #242543;
+            padding: 1.2rem 2rem;
+            animation: fadeIn 1s ease-out;
+            width: 100%;
+            position: relative;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .brand-link {
+            display: inline-block;
+            max-width: 45%;
+        }
+        .brand-img {
+            height: 45px; 
+            display: block;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        
+        /* Desktop Laptop Navigation Menu (Aligned to exactly match index.html) */
+        nav ul {
+            display: flex;
+            gap: 1.8rem;
+            list-style: none;
+            align-items: center;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.05rem; 
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+        nav a.active-link {
+            font-size: 1.05rem;
+            color: #ffffff;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #ffffff;
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+        nav a:hover::after, .active-link::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Hamburger Drawer Elements */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0.2rem;
+            line-height: 1;
+        }
+        .nav-drawer {
+            position: fixed;
+            top: 0;
+            right: -320px; 
+            width: 320px;
+            height: 100%;
+            background-color: #1b1c33; 
+            box-shadow: -5px 0 15px rgba(0,0,0,0.25);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 999;
+        }
+        .nav-drawer.open {
+            right: 0;
+        }
+        .drawer-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 2rem;
+            align-self: flex-end;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .nav-drawer ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            margin-top: 1rem;
+        }
+        .nav-drawer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.25rem;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 998;
+        }
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- ROLLING NEWS TICKER (COPY-PROTECTED) --- */
+        .ticker-wrap {
+            width: 100%;
+            background-color: #1b1c33; 
+            border-bottom: 1px solid rgba(230, 225, 222, 0.2);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 0.8rem 0;
+            
+            -webkit-user-select: none; 
+            -ms-user-select: none;     
+            user-select: none;         
+        }
+        .ticker {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 75s linear infinite; 
+        }
+        .ticker-item {
+            display: inline-block;
+            font-size: 1.05rem;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .ticker-divider {
+            color: #E6E1DE; 
+            margin: 0 1.8rem;
+            font-size: 1.1rem;
+            display: inline-block;
+            opacity: 0.85;
+            vertical-align: middle;
+        }
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* --- MAIN CONTENT LAYOUT AREA --- */
+        .expertise-main {
+            padding: 5rem 0;
+            animation: fadeIn 1s ease-out;
+            width: 100%;
+        }
+
+        /* Mission Container Box */
+        .mission-container {
+            max-width: 900px;
+            margin: 0 auto 5rem auto;
+            padding: 0 2rem;
+            animation: fadeInUp 1s ease-out;
+            width: 100%;
+        }
+        .mission-box {
+            border: 2px solid #242543;
+            background-color: #E6E1DE; 
+            padding: 4.5rem 4rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+        .mission-box h2 {
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #242543;
+            margin-bottom: 1.8rem;
+            letter-spacing: 1px;
+        }
+        .mission-box p {
+            font-size: 1.3rem;
+            color: #242543;
+            line-height: 1.8;
+        }
+
+        /* Alternating Feature Grid layout styles */
+        .expertise-row {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+            width: 100%;
+        }
+        .expertise-img-frame img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .expertise-text-frame {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+        .expertise-text-frame h3 {
+            font-size: 2.3rem;
+            font-weight: 500;
+            color: #242543;
+            margin-bottom: 1.5rem;
+            line-height: 1.25;
+        }
+        .expertise-text-frame p {
+            font-size: 1.25rem;
+            color: #4a4b65;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+        .find-out-more {
+            font-size: 1.1rem;
+            color: #242543;
+            text-decoration: none;
+            display: inline-block;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #242543;
+            font-weight: 500;
+        }
+
+        /* --- SEPARATOR LINE DESIGN --- */
+        .section-divider {
+            max-width: 1160px;
+            margin: 0 auto;
+            border: none;
+            border-top: 1px solid rgba(36, 37, 67, 0.15); 
+        }
+
+        /* --- PANORAMIC BREAK IMAGE --- */
+        .panoramic-divider {
+            width: 100%;
+            height: 340px;
+            background-image: url('thames-river.jpg'); 
+            background-size: cover;
+            background-position: center 40%;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #bcbfc7; 
+            color: #242543;
+            padding: 6rem 4rem 2rem 4rem;
+            width: 100%;
+        }
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1.2fr 0.1fr 2.5fr;
+            gap: 2rem;
+            align-items: flex-start;
+            width: 100%;
+        }
+        .footer-col h3 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        .footer-col p {
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+        }
+        .vertical-divider {
+            border-left: 2px solid #ffffff;
+            height: 180px;
+            align-self: center;
+            margin: 0 auto;
+        }
+        .footer-branding-huge {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            padding-left: 1.5rem;
+        }
+        .giant-pilc {
+            font-size: 9.5rem;
+            font-weight: 400;
+            line-height: 0.85;
+            color: rgba(255,255,255,0.7);
+        }
+        .stacked-title-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .stacked-title-text span {
+            font-size: 2.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.1;
+        }
+        .copyright-zone {
+            width: 100%;
+            max-width: 1300px;
+            margin: 4rem auto 0 auto;
+            font-size: 1rem;
+        }
+
+        /* --- RESPONSIVE MEDIA BREAKPOINTS --- */
+        @media (max-width: 1024px) {
+            header {
+                padding: 1.1rem 1.2rem;
+            }
+            nav {
+                display: none;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .brand-link {
+                max-width: 75%;
+            }
+            .brand-img {
+                height: 48px; 
+            }
+            
+            .expertise-row { 
+                grid-template-columns: 1fr !important; 
+                gap: 2.5rem; 
+                padding: 3rem 1.2rem; 
+                width: 100%;
+            }
+            .expertise-row :nth-child(1) { order: 2; }
+            .expertise-row :nth-child(2) { order: 1; }
+            .expertise-text-frame h3 { font-size: 2.1rem; }
+            .expertise-img-frame img { height: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+            
+            .mission-container {
+                padding: 0 1.2rem;
+                margin-bottom: 3.5rem;
+            }
+            .mission-box { 
+                padding: 3.5rem 1.8rem; 
+                width: 100%;
+            }
+            .mission-box h2 { font-size: 2.1rem; }
+            .mission-box p { font-size: 1.18rem; }
+            .section-divider { max-width: 90%; }
+
+            .panoramic-divider {
+                height: 200px;
+            }
+            footer {
+                padding: 4rem 1.2rem 2rem 1.2rem;
+            }
+            .footer-container { 
+                grid-template-columns: 1fr; 
+                gap: 2.5rem; 
+                text-align: center; 
+            }
+            .vertical-divider { 
+                display: none; 
+            }
+            .footer-branding-huge { 
+                grid-template-columns: 1fr; 
+                padding-left: 0; 
+                gap: 0.5rem;
+            }
+            .giant-pilc { 
+                font-size: 5.5rem; 
+            }
+            .stacked-title-text span { 
+                font-size: 1.5rem; 
+            }
+            .copyright-zone { 
+                text-align: center; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="brand-link">
+                <img src="logo-banner.png" alt="PILC Banner" class="brand-img">
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home: About Us</a></li>
+                    <li><a href="expertise.html" class="active-link">Our Expertise</a></li>
+                    <li><a href="services.html">Our Services</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" id="openDrawerBtn" aria-label="Open Menu">☰</button>
+        </div>
+    </header>
+
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <div class="nav-drawer" id="navDrawer">
+        <button class="drawer-close" id="closeDrawerBtn" aria-label="Close Menu">&times;</button>
+        <ul>
+            <li><a href="index.html">Home: About Us</a></li>
+            <li><a href="expertise.html">Our Expertise</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="news.html">News</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </div>
+
+    <div class="ticker-wrap" id="protectedTicker">
+        <div class="ticker">
+            <span class="ticker-item">Guinea has reached a settlement with Emirates Global Aluminium to resolve a long-running dispute over the seizure of its local operations, agreeing to allow bauxite shipments to resume</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">Ukraine says it has defeated a €22.7 million Energy Charter Treaty claim brought by a Dutch renewables company</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">The United Nations Commission on International Trade Law, UNCITRAL, is celebrating its 60th anniversary this year</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">A UNCITRAL tribunal in London has ordered Uganda to pay US$139 million to an Egyptian-owned investor over a terminated concession to operate a cross-border railway</span><span class="ticker-divider">⊹</span>
+            <span class="ticker-item">Panama has defeated an ICSID claim lodged by a Venezuela-based banking group that accused state entities of improperly drawing on bonds issued to guarantee public works contracts</span>
+        </div>
+    </div>
+
+    <main class="expertise-main">
+        
+        <div class="mission-container">
+            <div class="mission-box" id="protectedAboutBox">
+                <h2>Our Mission at PILC</h2>
+                <p>To provide legal advice and representation to states and other entities appearing before international courts and tribunals that are in need of assistance.</p>
+            </div>
+        </div>
+
+        <div class="expertise-row">
+            <div class="expertise-img-frame"><img src="courtroom.jpg" alt="Courtroom Overview"></div>
+            <div class="expertise-text-frame">
+                <h3>Advocacy before International Courts and Tribunals</h3>
+                <p>Expertise in assisting states appearing before the International Court of Justice, ICSID arbitration and the Permanent Court of Arbitration.</p>
+                <a href="#" class="find-out-more">Find Out More</a>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="expertise-row">
+            <div class="expertise-text-frame" style="order: 1;">
+                <h3>Assist Diplomats in Negotiating International Instruments</h3>
+                <p>Expertise in drafting Treaties, General Assembly and Security Council Resolutions.</p>
+                <a href="#" class="find-out-more">Find Out More</a>
+            </div>
+            <div class="expertise-img-frame" style="order: 2;"><img src="un-hall.jpg" alt="UN Assembly General Space"></div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="expertise-row">
+            <div class="expertise-img-frame"><img src="flags-un.jpg" alt="UN International Flags Placed Side By Side"></div>
+            <div class="expertise-text-frame">
+                <h3>Advice to States to help resolve International Disputes</h3>
+                <p>We provide legal advice to states engaged in disputes of an international character.</p>
+                <a href="#" class="find-out-more">Find Out More</a>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="expertise-row">
+            <div class="expertise-text-frame" style="order: 1;">
+                <h3>Advice to States on Policy Making</h3>
+                <p>We provide advice to states on policy making and drafting legislation. We also organise bespoke training in public international law to public officials.</p>
+                <a href="#" class="find-out-more">Find Out More</a>
+            </div>
+            <div class="expertise-img-frame" style="order: 2;"><img src="embassy-row.jpg" alt="Embassy Building Pillars"></div>
+        </div>
+
+    </main>
+
+    <div class="panoramic-divider"></div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>London Office</h3>
+                <p>45 Fitzroy Street</p>
+                <p>London W1T 6EB</p>
+                <br>
+                <p>United Kingdom</p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <p>Email: info@thepilc.co.uk</p>
+            </div>
+
+            <div class="vertical-divider"></div>
+
+            <div class="footer-branding-huge">
+                <div class="giant-pilc">PILC</div>
+                <div class="stacked-title-text">
+                    <span>Public</span>
+                    <span>International</span>
+                    <span>Law</span>
+                    <span>Consultancy</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright-zone">
+            <p>&copy; Public International Law Consultancy 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        const openDrawerBtn = document.getElementById('openDrawerBtn');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+        const navDrawer = document.getElementById('navDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+
+        function openMenu() {
+            navDrawer.classList.add('open');
+            drawerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeMenu() {
+            navDrawer.classList.remove('open');
+            drawerOverlay.classList.remove('active');
+            document.body.style.overflow = ''; 
+        }
+
+        openDrawerBtn.addEventListener('click', openMenu);
+        closeDrawerBtn.addEventListener('click', closeMenu);
+        drawerOverlay.addEventListener('click', closeMenu);
+
+        // Security interactions
+        const protectedTicker = document.getElementById('protectedTicker');
+        const protectedAboutBox = document.getElementById('protectedAboutBox');
+
+        protectedTicker.addEventListener('contextmenu', e => e.preventDefault());
+        protectedAboutBox.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
